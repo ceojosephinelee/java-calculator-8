@@ -1,64 +1,41 @@
 package calculator;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import camp.nextstep.edu.missionutils.Console;
 import java.util.regex.Pattern;
 
 public class Application {
     public static void main(String[] args) {
         //입력
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input;
-        try {
-            input = br.readLine(); //주의!!!!!!!br.readLine()은 한 줄만 읽음! \n을 기준으로 substring 할 수 없음.
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        int sum = 0;
+        String input = Console.readLine();
+        //테스트코드는 Console.readLine() 때문에  \\n으로 입력할테니 \n으로 replace 해주면 됨.
+        input = input.replace("\\n", "\n");
         //빈 문자열이나 null을 입력받으면 0
         if(input == null || input.trim().equals("")) { //isEmpty()도 가능. trim 해주는 것도 일종의 예외 처리?.null부터 체크해줘야함!!
-            sum =0;
+            System.out.println("결과 : 0");
+            Console.close();
+            return;
         }
-        String[] strs; //배열은 길이 고정인거 아닌가?
-
-        if(input.startsWith("//")) { //커스텀 구분자는 다음 줄 입력 받아야함 커스텀 구분자 없다면 두번째 줄 있으면 예외 처리
-
-            String custom = input.substring(2); //커스텀 구분자 추출
+        String[] strs;
+        int sum = 0;
+        if(input.startsWith("//")) {
+            int newLineIndex = input.indexOf("\n"); //indexOf에 첫번째로 나오는 것이라는 의미가 내포되어 있음!따라서 뒤에 \\n 또 나와도 상관x->후에 커스텀과 기본 구분자 외의 문자로 예외 처리될 것임
+            //  \n 이 없는 경우 예외 처리
+            if(newLineIndex == -1) {
+                throw new IllegalArgumentException("커스텀 구분자 사용시 줄바꿈이 필요합니다");
+            }
+            String customSeperator = input.substring(2,newLineIndex); //커스텀 구분자 추출
             //커스텀 구분자 예외 처리
-            if(custom.isEmpty()||custom.contains(" ")) {
+            if(customSeperator.isEmpty()) {
                 throw new IllegalArgumentException("커스텀 구분자가 비어있습니다");
-            }else if(custom.length()>1){
+            }else if(customSeperator.length()>1){
                 throw new IllegalArgumentException("커스텀 구분자는 한 글자여야 합니다");
             }
-            if (!custom.matches("[^0-9]")) {
-                throw new IllegalArgumentException("커스텀 구분자는 숫자가 될 수 없습니다.");
-            }//이건 문제 조건에 없지만 내가 추가함
-            //첫번째 줄 커스텀 구분자 정상 입력받으면 두 번째 줄 입력받기
-            String input2;//2번째 줄 입력받기
-            try {
-                input2=br.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (!customSeperator.matches("[^0-9]")) { //문제 조건에 없지만 내가 추가함
+                throw new IllegalArgumentException("숫자는 커스텀 구분자가 될 수 없습니다.");
             }
-            // 세 번째 줄이 존재하는지 확인 (있으면 예외 처리)
-            try {
-                if (br.ready()) { // 다음 입력 줄이 남아 있다면
-                    throw new IllegalArgumentException("커스텀 구분자 사용 시 문자열은 두 줄까지만 입력 가능합니다.");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            strs = input2.split("[:,]|"+ Pattern.quote(custom)); //기본구분자 & 커스텀 구분자로 분리
+            String sentence = input.substring(newLineIndex+1); //"\n"는 하나의 인덱스로 인식!, 4라고 적어도 되지만 가독성.유지보수성 떨어짐.
+            strs = sentence.split("[:,]|"+ Pattern.quote(customSeperator)); //기본구분자 & 커스텀 구분자로 분리
         }else{
-            //기본 구분자만 사용 시 문자열 한 줄까지만 입력 가능
-            try {
-                if (br.ready()) { // 다음 입력 줄이 남아 있다면
-                    throw new IllegalArgumentException("기본 구분자 사용 시 문자열은 한 줄까지만 입력 가능합니다.");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
             //기본 구분자(:,)로 문자열 분리
             strs = input.split("[:,]");//정규식 표현
         }
@@ -74,12 +51,13 @@ public class Application {
                 if(num<=0){
                     throw new IllegalArgumentException("양수를 입력해야합니다");
                 }
-                sum+=num; //입력 정상이면 합산
+                sum+=num; //입력이 정수이면서 양수이면 합산
             }catch (NumberFormatException e){
                 throw new IllegalArgumentException("정수가 아닙니다");
             }
         }
         //출력
         System.out.println("결과 : "+sum);
+        Console.close();
     }
 }
