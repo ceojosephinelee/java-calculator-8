@@ -31,9 +31,9 @@ public class Application {
             }else if(custom.length()>1){
                 throw new IllegalArgumentException("커스텀 구분자는 한 글자여야 합니다");
             }
-            if (!custom.matches("[^0-9]")) {//이건 문제 조건에 없지만 내가 추가함
-                throw new IllegalArgumentException("커스텀 구분자는 숫자일 수 없습니다.");
-            }
+            if (!custom.matches("[^0-9]")) {
+                throw new IllegalArgumentException("커스텀 구분자는 숫자가 될 수 없습니다.");
+            }//이건 문제 조건에 없지만 내가 추가함
             //첫번째 줄 커스텀 구분자 정상 입력받으면 두 번째 줄 입력받기
             String input2;//2번째 줄 입력받기
             try {
