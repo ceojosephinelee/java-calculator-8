@@ -6,24 +6,33 @@ import java.util.regex.Pattern;
 public class Application {
     public static void main(String[] args) {
         //입력
+        String input = readInput();
+
         String input = Console.readLine();
         //테스트코드는 Console.readLine() 때문에  \\n으로 입력할테니 \n으로 replace 해주면 됨.
         input = input.replace("\\n", "\n");
         //빈 문자열이나 null을 입력받으면 0
+        validateEmpty(input);
         if(input == null || input.trim().equals("")) { //isEmpty()도 가능. trim 해주는 것도 일종의 예외 처리?.null부터 체크해줘야함!!
-            System.out.println("결과 : 0");
+            int result =0;
+            printer(result);
+
             Console.close();
             return;
         }
+
+        //문자열 분리
         String[] strs;
-        int sum = 0;
+        String[] strs = splitter(input);
         if(input.startsWith("//")) {
             int newLineIndex = input.indexOf("\n"); //indexOf에 첫번째로 나오는 것이라는 의미가 내포되어 있음!따라서 뒤에 \\n 또 나와도 상관x->후에 커스텀과 기본 구분자 외의 문자로 예외 처리될 것임
+            validateNewLine(input);
             //  \n 이 없는 경우 예외 처리
             if(newLineIndex == -1) { //찾는 문자가 없을 때 -1
                 throw new IllegalArgumentException("커스텀 구분자 사용시 줄바꿈이 필요합니다");
             }
             String customSeperator = input.substring(2,newLineIndex); //커스텀 구분자 추출
+            validateSplitter(customSeperator);
             //커스텀 구분자 예외 처리
             if(customSeperator.isEmpty()) {
                 throw new IllegalArgumentException("커스텀 구분자가 비어있습니다");
@@ -39,8 +48,12 @@ public class Application {
             //기본 구분자(:,)로 문자열 분리
             strs = input.split("[:,]");//정규식 표현
         }
-        //분리된 문자열 예외 처리
+
+        //분리된 문자열 예외 처리. 합산
+        int sum = adder(strs);
+        int sum = 0;
         for (String str : strs) {
+            validateNumber(str);
             if(str.isEmpty()) { //""
                 throw new IllegalArgumentException("빈 문자열이 있습니다.");
             }else if(str.contains(" ")){ //"2 "
@@ -56,6 +69,7 @@ public class Application {
                 throw new IllegalArgumentException("정수가 아닙니다");
             }
         }
+        printer(sum);
         //출력
         System.out.println("결과 : "+sum);
         Console.close();
