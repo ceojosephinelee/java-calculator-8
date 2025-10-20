@@ -2,13 +2,12 @@ package calculator;
 
 import camp.nextstep.edu.missionutils.Console;
 
-public class Validator {
-    public static void validateEmpty(String input) { //뭘 반환하는 거지?
+public class Validator {     //각종 예외 처리
+    public static void validateEmpty(String input) {
         if(input == null || input.trim().equals("")) { //isEmpty()도 가능. trim 해주는 것도 일종의 예외 처리?.null부터 체크해줘야함!!
             int result =0;
             OutputView.printer(result);
             Console.close();
-            return;
         }
 
     }
@@ -29,7 +28,7 @@ public class Validator {
             throw new IllegalArgumentException("숫자는 커스텀 구분자가 될 수 없습니다.");
         }
     }
-    public static void validateNumber(String str) {
+    public static void validateNumber(String str) {      // str이 더할 수 있는 숫자인지 점검
         if(str.isEmpty()) { //""
             throw new IllegalArgumentException("빈 문자열이 있습니다.");
         }else if(str.contains(" ")){ //"2 "
