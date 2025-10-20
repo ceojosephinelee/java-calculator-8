@@ -21,7 +21,8 @@ public class Validator {     //각종 예외 처리
 
         if(customSeparator.isEmpty()) {
             throw new IllegalArgumentException("커스텀 구분자가 비어있습니다");
-        }else if(customSeparator.length()>1){
+        }
+        if(customSeparator.length()>1){
             throw new IllegalArgumentException("커스텀 구분자는 한 글자여야 합니다");
         }
         if (!customSeparator.matches("[^0-9]")) { //문제 조건에 없지만 내가 추가함
@@ -31,7 +32,8 @@ public class Validator {     //각종 예외 처리
     public static void validateNumber(String str) {      // str이 더할 수 있는 숫자인지 점검
         if(str.isEmpty()) { //""
             throw new IllegalArgumentException("빈 문자열이 있습니다.");
-        }else if(str.contains(" ")){ //"2 "
+        }
+        if(str.contains(" ")){ //"2 "
             throw new IllegalArgumentException("입력에 공백이 포함되어 있습니다.");
         }
         try{
