@@ -20,7 +20,7 @@ public class Application {
         if(input.startsWith("//")) {
             int newLineIndex = input.indexOf("\n"); //indexOf에 첫번째로 나오는 것이라는 의미가 내포되어 있음!따라서 뒤에 \\n 또 나와도 상관x->후에 커스텀과 기본 구분자 외의 문자로 예외 처리될 것임
             //  \n 이 없는 경우 예외 처리
-            if(newLineIndex == -1) {
+            if(newLineIndex == -1) { //찾는 문자가 없을 때 -1
                 throw new IllegalArgumentException("커스텀 구분자 사용시 줄바꿈이 필요합니다");
             }
             String customSeperator = input.substring(2,newLineIndex); //커스텀 구분자 추출
